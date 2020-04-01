@@ -2,47 +2,52 @@
   "name": "@vkontakte/create-vk-mini-app",
   "version": "1.6.5",
   "description": "VK Mini Apps Boilerplate",
-  "main": "bin/create-vk-mini-app.js   ",
-  "bin": {
-    "create-vk-mini-app": "./bin/create-vk-mini-app.js"
-  },
+  "main": "index.js",
   "scripts": {
-    "create": "node ./bin/create-vk-mini-app.js"
-  },
-  "engines": {
-    "node": ">=8.0.0"
+    "start": "cross-env PORT=10888 react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "vk-miniapps-deploy"
   },
   "keywords": [],
-  "author": {
-    "name": "VK",
-    "url": "https://vk.com"
-  },
-  "contributors": [
-    {
-      "name": "Gleb Vorontsov",
-      "email": "vorontsov.gleb@gmail.com",
-      "url": "https://vk.com/boy"
-    }
-  ],
+  "author": "",
   "license": "MIT",
+  "devDependencies": {
+    "cross-env": "^5.2.1",
+    "react-hot-loader": "^4.12.20",
+    "react-scripts": "^3.4.1",
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "ws": "3.3.2"
+  },
   "dependencies": {
-    "@vkontakte/icons": "^1.18.2",
-    "@vkontakte/vk-miniapps-deploy": "^0.0.17",
-    "@vkontakte/vkui": "^3.5.0",
-    "babel-eslint": "10.1.0",
+    "@types/react": "^16.9.31",
+    "@types/react-dom": "^16.9.6",
+    "@vkontakte/icons": "^1.20.0",
+    "@vkontakte/vk-bridge": "^2.1.5",
+    "@vkontakte/vk-miniapps-deploy": "0.0.17",
+    "@vkontakte/vkui": "^3.5.7",
+    "babel-eslint": "^10.1.0",
     "chalk": "^2.4.2",
     "core-js": "^3.6.4",
-    "eruda": "^2.2.0",
+    "eruda": "^2.2.1",
     "eruda-code": "^2.0.0",
     "eruda-dom": "^2.0.0",
-    "fs-extra": "^8.0.1",
     "prop-types": "^15.7.2",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
-  "devDependencies": {
-    "cross-env": "^5.2.0",
-    "react-hot-loader": "^4.9.0",
-    "react-scripts": "^3.4.1"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
