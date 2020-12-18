@@ -1,54 +1,129 @@
-import React, { useState, useEffect } from 'react';
-import bridge, { VKBridgeEvent, AnyReceiveMethodName, UserInfo } from '@vkontakte/vk-bridge';
-import View from '@vkontakte/vkui/dist/components/View/View';
-import ScreenSpinner, { ScreenSpinnerProps } from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
-import '@vkontakte/vkui/dist/vkui.css';
+import React from "react";
+import { QuestionItem } from "./interfaces";
 
-import Home from './panels/Home';
-import Persik from './panels/Persik';
+import { useFela, CssFelaStyle } from "react-fela";
 
-class App extends React.Component <{}, {activePanel: string, fetchedUser: UserInfo|null, popout: any}>{
-	
-	async fetchData() {
-		const user = await bridge.send('VKWebAppGetUserInfo');
-		this.setState({fetchedUser: user, popout: null});
+const quizData: QuestionItem[] = [
+	{
+		question: "Какого типа данных нет в JS?",
+		answers: ["String", "Boolean", "Symbol", "Integer"],
+		correct: 3,
+	},
+	{
+		question: "Какой результат вызова typeof null?",
+		answers: ["null", "object", "number", "string"],
+		correct: 1,
+	},
+	{
+		question: "Чему равно '1' + 1 в JS?",
+		answers: ["2", "1", "11", "NaN"],
+		correct: 2,
+	},
+	{
+		question: "В каком стандарте JS появились стрелочные функции?",
+		answers: ["ES5", "ES6", "ES7", "ES8"],
+		correct: 1,
+	},
+	{
+		question: "В каком году был придуман JS?",
+		answers: ["1995", "2002", "2010", "2020..."],
+		correct: 0,
+	},
+];
+
+
+export const App: React.FC = () => {
+	const { css } = useFela();
+	const [currentQuiz, setCurrentQuiz] = React.useState<number>(0);
+	const [score, setScore] = React.useState<number>(0);
+	const [inputCheck, setInputCheck] = React.useState<boolean>(false);
+
+	function handleInputCheck(event: React.ChangeEvent<HTMLInputElement>): void {
+		setInputCheck(!event.target.checked);
 	}
 
-	componentDidMount() {
-		bridge.subscribe((event: VKBridgeEvent<AnyReceiveMethodName>) => {
-			if (event.detail.type === 'VKWebAppUpdateConfig') {
-				const schemeAttribute = document.createAttribute('scheme');
-				schemeAttribute.value = event.detail.data.scheme ? event.detail.data.scheme : 'client_light';
-				document.body.attributes.setNamedItem(schemeAttribute);
-			}
-		});
-		this.fetchData().then(() => {
-			console.log("Data is fetched!")	
-		});
-	}
+	function handleSubmitButton(): void {
+		const answersEl = document.querySelectorAll('input[name=answer]');
+		const correctAnswerEl: any = document.getElementById(`answer${quizData[currentQuiz].correct}`);
+		const correctAnswerId: number = Number(correctAnswerEl?.getAttribute('id')?.slice(6));
 
-	render() {
-
-		const go = (e : any) => {
-			this.setState({activePanel: e.currentTarget.dataset.to});
-		};
-
-		return (
-				<View activePanel={this.state.activePanel} popout={this.state.popout}>
-					<Home id='home' fetchedUser={this.state.fetchedUser} go={go} />
-					<Persik id='persik' go={go} />
-				</View>
-		);
-	}
-
-	constructor(props:any){
-		super(props);
-		this.state = {
-			activePanel: "home", 
-			fetchedUser: null, 
-			popout: <ScreenSpinner />
+		answersEl.forEach(el => {
+			// if(el.)
+			console.log(el);
+		})
+		
+		if(correctAnswerEl?.checked) {
+			setScore(score + 1);
+			console.log(score);
 		}
-	}
-}
-export default App;
 
+		setCurrentQuiz(currentQuiz + 1);
+	}
+
+	return (
+		<div className={css(quizContainer)} id='quiz'>
+			<div className={css(quizHeader)}>
+				<h2 className={css(title)}>{quizData[currentQuiz].question}</h2>
+				<ul className={css(answers)}>
+					{quizData[currentQuiz].answers.map((answer, index) => (
+						<li key={index}>
+							<input type='radio' id={`answer${index}`} name='answer' onChange={handleInputCheck}/>
+							<label htmlFor={`answer${index}`}>{answer}</label>
+						</li>
+					))}
+				</ul>
+			</div>
+			<button className={css(submitButton)} onClick={handleSubmitButton}>Ответить</button>
+		</div>
+	);
+};
+
+const quizContainer: CssFelaStyle<{}, {}> = () => ({
+	backgroundColor: "#fff",
+	borderRadius: "10px",
+	boxShadow: "0 0 10px 2px rbga(100, 100, 100, 0.1)",
+	overflow: "hidden",
+	width: "600px",
+	maxWidth: "100%",
+});
+
+const quizHeader: CssFelaStyle<{}, {}> = () => ({
+	padding: "4rem",
+});
+
+const title: CssFelaStyle<{}, {}> = () => ({
+	padding: "1rem",
+	textAlign: "center",
+	margin: 0,
+});
+
+const answers: CssFelaStyle<{}, {}> = () => ({
+	listStyleType: "none",
+	padding: 0,
+	"> li": {
+		fontSsize: "1.2rem",
+		margin: "1rem 0",
+		"> label": {
+			cursor: "pointer",
+		},
+	},
+});
+
+const submitButton: CssFelaStyle<{}, {}> = () => ({
+	backgroundColor: "#8e44ad",
+	border: "none",
+	color: "#ffffff",
+	cursor: "pointer",
+	display: "block",
+	fontFamily: "inherit",
+	fontSize: "1.3rem",
+	width: "100%",
+	padding: "1.3rem",
+	":hover": {
+		backgroundColor: "#732d91",
+	},
+	":focus": {
+		backgroundColor: "#5e3370",
+		outline: "none",
+	},
+});
