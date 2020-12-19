@@ -35,7 +35,7 @@ export const App: React.FC = () => {
 	const { css } = useFela();
 	const [currentQuiz, setCurrentQuiz] = React.useState<number>(0);
 	const [score, setScore] = React.useState<number>(0);
-	const [inputCheck, setInputCheck] = React.useState<boolean>(false);
+	const [, setInputCheck] = React.useState<boolean>(false);
 
 	function handleInputCheck(event: React.ChangeEvent<HTMLInputElement>): void {
 		setInputCheck(!event.target.checked);
@@ -46,11 +46,8 @@ export const App: React.FC = () => {
 		const correctAnswerEl = document.getElementById(
 			`answer${quizData[currentQuiz].correct}`
 		) as HTMLInputElement;
-		const correctAnswerId: number = Number(
-			correctAnswerEl?.getAttribute("id")?.slice(6)
-		);
 
-		answersEl.forEach((el: any, index: number) => {
+		answersEl.forEach((el: any) => {
 			if (el.checked) {
 				if (correctAnswerEl?.checked) {
 					setScore(score + 1);
