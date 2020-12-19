@@ -31,7 +31,6 @@ const quizData: QuestionItem[] = [
 	},
 ];
 
-
 export const App: React.FC = () => {
 	const { css } = useFela();
 	const [currentQuiz, setCurrentQuiz] = React.useState<number>(0);
@@ -43,37 +42,63 @@ export const App: React.FC = () => {
 	}
 
 	function handleSubmitButton(): void {
-		const answersEl = document.querySelectorAll('input[name=answer]');
-		const correctAnswerEl: any = document.getElementById(`answer${quizData[currentQuiz].correct}`);
-		const correctAnswerId: number = Number(correctAnswerEl?.getAttribute('id')?.slice(6));
+		const answersEl = document.querySelectorAll("input[name=answer]");
+		const correctAnswerEl = document.getElementById(
+			`answer${quizData[currentQuiz].correct}`
+		) as HTMLInputElement;
+		const correctAnswerId: number = Number(
+			correctAnswerEl?.getAttribute("id")?.slice(6)
+		);
 
-		answersEl.forEach(el => {
-			// if(el.)
-			console.log(el);
-		})
-		
-		if(correctAnswerEl?.checked) {
-			setScore(score + 1);
-			console.log(score);
-		}
+		answersEl.forEach((el: any, index: number) => {
+			if (el.checked) {
+				if (correctAnswerEl?.checked) {
+					setScore(score + 1);
+				}
+				setCurrentQuiz(currentQuiz + 1);
+				el.checked = false;
+			}
+		});
+	}
 
-		setCurrentQuiz(currentQuiz + 1);
+	function handleReloadButton(): void {
+		setScore(0);
+		setCurrentQuiz(0);
 	}
 
 	return (
 		<div className={css(quizContainer)} id='quiz'>
-			<div className={css(quizHeader)}>
-				<h2 className={css(title)}>{quizData[currentQuiz].question}</h2>
-				<ul className={css(answers)}>
-					{quizData[currentQuiz].answers.map((answer, index) => (
-						<li key={index}>
-							<input type='radio' id={`answer${index}`} name='answer' onChange={handleInputCheck}/>
-							<label htmlFor={`answer${index}`}>{answer}</label>
-						</li>
-					))}
-				</ul>
-			</div>
-			<button className={css(submitButton)} onClick={handleSubmitButton}>Ответить</button>
+			<br/>
+			{currentQuiz < quizData.length ? (
+				<>
+					<div className={css(quizHeader)}>
+						<h2 className={css(title)}>{quizData[currentQuiz].question}</h2>
+						<ul className={css(answers)}>
+							{quizData[currentQuiz].answers.map((answer, index) => (
+								<li key={index}>
+									<input
+										type='radio'
+										id={`answer${index}`}
+										name='answer'
+										onChange={handleInputCheck}
+									/>
+									<label htmlFor={`answer${index}`}>{answer}</label>
+								</li>
+							))}
+						</ul>
+					</div>
+					<button className={css(submitButton)} onClick={handleSubmitButton}>
+						Ответить
+					</button>
+				</>
+			) : (
+				<>
+					<h2 className={css(title)}>
+						Вы верно ответили на {score} из {quizData.length} вопросов
+					</h2>{" "}
+					<button className={css(submitButton)} onClick={handleReloadButton}>Попробовать еще раз</button>
+				</>
+			)}
 		</div>
 	);
 };
