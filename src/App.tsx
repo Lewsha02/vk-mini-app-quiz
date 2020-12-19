@@ -42,12 +42,12 @@ export const App: React.FC = () => {
 	}
 
 	function handleSubmitButton(): void {
-		const answersEl = document.querySelectorAll("input[name=answer]");
+		const answersEl = document.querySelectorAll("input[name=answer]") as NodeListOf<HTMLInputElement>;
 		const correctAnswerEl = document.getElementById(
 			`answer${quizData[currentQuiz].correct}`
 		) as HTMLInputElement;
 
-		answersEl.forEach((el: any) => {
+		answersEl.forEach((el) => {
 			if (el.checked) {
 				if (correctAnswerEl?.checked) {
 					setScore(score + 1);
