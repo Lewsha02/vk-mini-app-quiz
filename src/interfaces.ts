@@ -1,6 +1,11 @@
+export interface answerOptions {
+	option: string,
+	isCorrect: boolean
+};
+
 export interface QuestionItem {
 	question: string;
-	answers: Array<string>
-	correct: number;
-}
-export interface Questions extends Array<QuestionItem>{}
+	answers: Array<answerOptions>
+};
+
+export interface Questions extends Array<QuestionItem>{};

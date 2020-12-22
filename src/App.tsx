@@ -1,33 +1,54 @@
 import React from "react";
 import { QuestionItem } from "./interfaces";
+import { answerOptions } from "./interfaces";
 
 import { useFela, CssFelaStyle } from "react-fela";
 
 const quizData: QuestionItem[] = [
 	{
 		question: "Какого типа данных нет в JS?",
-		answers: ["String", "Boolean", "Symbol", "Integer"],
-		correct: 3,
+		answers: [
+			{ option: "String", isCorrect: false },
+			{ option: "Boolean", isCorrect: false },
+			{ option: "Symbol", isCorrect: false },
+			{ option: "Integer", isCorrect: true },
+		],
 	},
 	{
 		question: "Какой результат вызова typeof null?",
-		answers: ["null", "object", "number", "string"],
-		correct: 1,
+		answers: [
+			{ option: "null", isCorrect: false },
+			{ option: "object", isCorrect: true },
+			{ option: "number", isCorrect: false },
+			{ option: "string", isCorrect: false },
+		],
 	},
 	{
 		question: "Чему равно '1' + 1 в JS?",
-		answers: ["2", "1", "11", "NaN"],
-		correct: 2,
+		answers: [
+			{ option: "2", isCorrect: false },
+			{ option: "1", isCorrect: false },
+			{ option: "11", isCorrect: true },
+			{ option: "NaN", isCorrect: false },
+		],
 	},
 	{
 		question: "В каком стандарте JS появились стрелочные функции?",
-		answers: ["ES5", "ES6", "ES7", "ES8"],
-		correct: 1,
+		answers: [
+			{ option: "ES5", isCorrect: false },
+			{ option: "ES6", isCorrect: true },
+			{ option: "ES7", isCorrect: false },
+			{ option: "ES8", isCorrect: false },
+		],
 	},
 	{
 		question: "В каком году был придуман JS?",
-		answers: ["1995", "2002", "2010", "2020..."],
-		correct: 0,
+		answers: [
+			{ option: "1995", isCorrect: true },
+			{ option: "2002", isCorrect: false },
+			{ option: "2010", isCorrect: false },
+			{ option: "2020...", isCorrect: false },
+		],
 	},
 ];
 
@@ -35,27 +56,12 @@ export const App: React.FC = () => {
 	const { css } = useFela();
 	const [currentQuiz, setCurrentQuiz] = React.useState<number>(0);
 	const [score, setScore] = React.useState<number>(0);
-	const [, setInputCheck] = React.useState<boolean>(false);
 
-	function handleInputCheck(event: React.ChangeEvent<HTMLInputElement>): void {
-		setInputCheck(!event.target.checked);
-	}
-
-	function handleSubmitButton(): void {
-		const answersEl = document.querySelectorAll("input[name=answer]") as NodeListOf<HTMLInputElement>;
-		const correctAnswerEl = document.getElementById(
-			`answer${quizData[currentQuiz].correct}`
-		) as HTMLInputElement;
-
-		answersEl.forEach((el) => {
-			if (el.checked) {
-				if (correctAnswerEl?.checked) {
-					setScore(score + 1);
-				}
-				setCurrentQuiz(currentQuiz + 1);
-				el.checked = false;
-			}
-		});
+	function handleAnswerClick(answer: answerOptions): void {
+		if (answer.isCorrect) {
+			setScore((prev) => ++prev);
+		}
+		setCurrentQuiz((prev) => ++prev);
 	}
 
 	function handleReloadButton(): void {
@@ -65,37 +71,31 @@ export const App: React.FC = () => {
 
 	return (
 		<div className={css(quizContainer)} id='quiz'>
-			<br/>
-			{currentQuiz < quizData.length ? (
-				<>
-					<div className={css(quizHeader)}>
+			<div className={css(quizHeader)}>
+				{currentQuiz < quizData.length ? (
+					<>
 						<h2 className={css(title)}>{quizData[currentQuiz].question}</h2>
-						<ul className={css(answers)}>
-							{quizData[currentQuiz].answers.map((answer, index) => (
-								<li key={index}>
-									<input
-										type='radio'
-										id={`answer${index}`}
-										name='answer'
-										onChange={handleInputCheck}
-									/>
-									<label htmlFor={`answer${index}`}>{answer}</label>
-								</li>
-							))}
-						</ul>
-					</div>
-					<button className={css(submitButton)} onClick={handleSubmitButton}>
-						Ответить
-					</button>
-				</>
-			) : (
-				<>
-					<h2 className={css(title)}>
-						Вы верно ответили на {score} из {quizData.length} вопросов
-					</h2>{" "}
-					<button className={css(submitButton)} onClick={handleReloadButton}>Попробовать еще раз</button>
-				</>
-			)}
+						{quizData[currentQuiz].answers.map((answer, index) => (
+							<button
+								key={`${answer}_${index}`}
+								className={css(answerBtn)}
+								onClick={() => handleAnswerClick(answer)}
+							>
+								{answer.option}
+							</button>
+						))}
+					</>
+				) : (
+					<>
+						<h2 className={css(title)}>
+							Вы верно ответили на {score} из {quizData.length} вопросов
+						</h2>
+						<button className={css(reloadBtn)} onClick={handleReloadButton}>
+							Попробовать еще раз
+						</button>
+					</>
+				)}
+			</div>
 		</div>
 	);
 };
@@ -107,45 +107,83 @@ const quizContainer: CssFelaStyle<{}, {}> = () => ({
 	overflow: "hidden",
 	width: "600px",
 	maxWidth: "100%",
+	"@media (max-width: 768px)": {
+		width: "450px",
+	},
+	"@media (max-width: 480px)": {
+		width: "300px",
+	},
 });
 
 const quizHeader: CssFelaStyle<{}, {}> = () => ({
 	padding: "4rem",
+	"@media (max-width: 768px)": {
+		padding: "2rem",
+	},
+	"@media (max-width: 480px)": {
+		padding: "1rem",
+	},
 });
 
 const title: CssFelaStyle<{}, {}> = () => ({
-	padding: "1rem",
+	padding: "0.5rem",
 	textAlign: "center",
 	margin: 0,
-});
-
-const answers: CssFelaStyle<{}, {}> = () => ({
-	listStyleType: "none",
-	padding: 0,
-	"> li": {
-		fontSsize: "1.2rem",
-		margin: "1rem 0",
-		"> label": {
-			cursor: "pointer",
-		},
+	marginBottom: "40px",
+	"@media (max-width: 768px)": {
+		fontSize: "24px",
+	},
+	"@media (max-width: 480px)": {
+		fontSize: "18px",
 	},
 });
 
-const submitButton: CssFelaStyle<{}, {}> = () => ({
-	backgroundColor: "#8e44ad",
-	border: "none",
-	color: "#ffffff",
+const answerBtn: CssFelaStyle<{}, {}> = () => ({
+	backgroundColor: "#683AB6",
+	border: "2px solid #C9C8CC",
+	borderRadius: "20px",
+	width: "100%",
+	color: "#fff",
 	cursor: "pointer",
 	display: "block",
 	fontFamily: "inherit",
-	fontSize: "1.3rem",
-	width: "100%",
-	padding: "1.3rem",
+	fontSize: "16px",
+	marginBottom: "15px",
+	padding: "15px",
 	":hover": {
-		backgroundColor: "#732d91",
+		backgroundColor: "#592ea3",
 	},
 	":focus": {
-		backgroundColor: "#5e3370",
+		backgroundColor: "#7340ca",
 		outline: "none",
+	},
+	"@media (max-width: 480px)": {
+		fontSize: "14px",
+		padding: "10px",
+	},
+});
+
+const reloadBtn: CssFelaStyle<{}, {}> = () => ({
+	backgroundColor: "#fbaf00",
+	border: "none",
+	borderRadius: "10px",
+	width: "100%",
+	color: "#fff",
+	cursor: "pointer",
+	display: "block",
+	fontFamily: "inherit",
+	fontSize: "18px",
+	marginBottom: "0px",
+	padding: "20px",
+	":hover": {
+		backgroundColor: "#e7a305",
+	},
+	":focus": {
+		backgroundColor: "#f3ac07",
+		outline: "none",
+	},
+	"@media (max-width: 480px)": {
+		fontSize: "16px",
+		padding: "15px",
 	},
 });
