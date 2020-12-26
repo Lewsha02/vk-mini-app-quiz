@@ -24,6 +24,8 @@
   "dependencies": {
     "@types/react": "^16.9.31",
     "@types/react-dom": "^16.9.6",
+    "@types/react-redux": "^7.1.14",
+    "@types/redux": "^3.6.0",
     "@vkontakte/icons": "^1.20.0",
     "@vkontakte/vk-bridge": "^2.1.5",
     "@vkontakte/vk-miniapps-deploy": "0.0.17",
@@ -37,7 +39,9 @@
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-fela": "^11.5.0"
+    "react-fela": "^11.5.0",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5"
   },
   "browserslist": {
     "production": [
