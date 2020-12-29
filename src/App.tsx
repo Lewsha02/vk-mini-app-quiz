@@ -1,13 +1,15 @@
 import React from "react";
+
 import { QuestionItem } from "./interfaces";
 import { answerOptions } from "./interfaces";
+import { RootState } from "./interfaces";
+
 import { Results } from "./components/Results";
 
 import { useFela, CssFelaStyle } from "react-fela";
 
 import { quizContainer, quizHeader, title, answerBtn } from "./styles";
 import { useSelector, useDispatch } from "react-redux";
-import { rootReducer } from "./redux/reducers/rootReducer";
 
 export const quizData: QuestionItem[] = [
 	{
@@ -57,29 +59,36 @@ export const quizData: QuestionItem[] = [
 	},
 ];
 
-type RootState = ReturnType<typeof rootReducer>;
-
 export const App: React.FC = () => {
 	const dispatch = useDispatch();
 	const { css } = useFela();
 	const [currentQuiz, setCurrentQuiz] = React.useState<number>(0);
 
-	let score = useSelector((score: RootState) => score.score.score);
+	// React.useEffect(function getCorrectAnswer(): answerOptions | undefined {
+	// 	const allAnswers = quizData[currentQuiz].answers;
+		
+	// 	const correctAnswer = allAnswers.find((answer) => answer.isCorrect === true);
+	// 	return correctAnswer;
+	// }, [currentQuiz]);
+
+	let score = useSelector((scoreObj: RootState) => scoreObj.scoreReducer.scoreValue);
 
 	function handleAnswerClick(answer: answerOptions): void {
 		if (answer.isCorrect) {
 			dispatch({
-				type: "SET_SCORE",
-				payload: ++score,
+				type: "INCREASE_SCORE",
+				payload: score,
 			});
 		}
+
+		// getCorrectAnswer();
+
 		setCurrentQuiz((prev) => ++prev);
 	}
 
 	function handleReloadButton(): void {
 		dispatch({
-			type: "SET_SCORE",
-			payload: 0,
+			type: "RESET_SCORE",
 		});
 		setCurrentQuiz(0);
 	}

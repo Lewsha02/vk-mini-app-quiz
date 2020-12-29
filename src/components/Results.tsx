@@ -5,9 +5,7 @@ import { useFela, CssFelaStyle } from "react-fela";
 
 import { title } from "../styles";
 
-interface IResultProps {
-	score: number
-}
+import { IResultProps } from '../interfaces';
 
 export const Results: React.FC<IResultProps> = ({score}: IResultProps) => {
 	const { css } = useFela();

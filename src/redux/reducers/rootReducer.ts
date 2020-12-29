@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import { score } from './score';
+import { scoreReducer } from './scoreReducer';
 
 export const rootReducer = combineReducers({
-	score
+	scoreReducer
 });
