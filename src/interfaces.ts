@@ -18,7 +18,7 @@ export interface IScorePayload {
 };
 
 export interface IAnswersPayload {
-	answerIndex: number,
+	question: string,
 	userOption: string,
 	correctOption: string,
 }
@@ -28,11 +28,15 @@ export interface IResultProps {
 }
 
 export interface IScoreAction {
-	type: string
+	type: 'INCREASE_SCORE' | 'RESET_SCORE',
 	payload: number
 }
 
 export interface IAnswersAction {
 	type: string,
-	payload: object
+	payload: IAnswersPayload
+}
+
+declare module 'react-redux' {
+	export interface DefaultRootState extends RootState{}
 }

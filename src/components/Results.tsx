@@ -1,29 +1,28 @@
 import React from "react";
-import { quizData } from "../App";
 
 import { useFela, CssFelaStyle } from "react-fela";
 
 import { title } from "../styles";
 
 import { IResultProps } from '../interfaces';
+import { IAnswersPayload } from '../interfaces';
 
-export const Results: React.FC<IResultProps> = ({score}: IResultProps) => {
+import { useSelector } from "react-redux";
+
+export const Results: React.FC<IResultProps> = ({score}) => {
 	const { css } = useFela();
-	console.log(score);
-	
+	const { answers }: any = useSelector((data) => data.answersReducer);
 
 	return (
 		<>
-			<h2 className={css(title)}>Вы верно ответили на такие-то вопросы</h2>
-			{quizData.map((quiz, index) => {
-				return (
-					<div key={`${quiz}_${index}`} className={css(quizResult)}>
-						<h4>{quiz.question}</h4>
-						<p>Ваш ответ: Lorem, ipsum.</p>
-						<p>Верный ответ: Lorem, ipsum.</p>
-					</div>
-				);
-			})}
+			<h2 className={css(title)}>Вы верно ответили на {score} из 5 вопросов</h2>
+			{answers.map((answer: IAnswersPayload, index: number) => (
+				<div key={`${answer.question}_${index}`} className={css(quizResult)}>
+					<h4>{answer.question}</h4>
+					<p>Ваш ответ: {answer.userOption}.</p>
+					<p>Верный ответ: {answer.correctOption}.</p>
+				</div>
+			))}
 		</>
 	);
 };

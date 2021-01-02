@@ -2,7 +2,7 @@ import React from "react";
 
 import { QuestionItem } from "./interfaces";
 import { answerOptions } from "./interfaces";
-import { RootState } from "./interfaces";
+import { IAnswersPayload } from "./interfaces";
 
 import { Results } from "./components/Results";
 
@@ -11,67 +11,23 @@ import { useFela, CssFelaStyle } from "react-fela";
 import { quizContainer, quizHeader, title, answerBtn } from "./styles";
 import { useSelector, useDispatch } from "react-redux";
 
-export const quizData: QuestionItem[] = [
-	{
-		question: "Какого типа данных нет в JS?",
-		answers: [
-			{ option: "String", isCorrect: false },
-			{ option: "Boolean", isCorrect: false },
-			{ option: "Symbol", isCorrect: false },
-			{ option: "Integer", isCorrect: true },
-		],
-	},
-	{
-		question: "Какой результат вызова typeof null?",
-		answers: [
-			{ option: "null", isCorrect: false },
-			{ option: "object", isCorrect: true },
-			{ option: "number", isCorrect: false },
-			{ option: "string", isCorrect: false },
-		],
-	},
-	{
-		question: "Чему равно '1' + 1 в JS?",
-		answers: [
-			{ option: "2", isCorrect: false },
-			{ option: "1", isCorrect: false },
-			{ option: "11", isCorrect: true },
-			{ option: "NaN", isCorrect: false },
-		],
-	},
-	{
-		question: "В каком стандарте JS появились стрелочные функции?",
-		answers: [
-			{ option: "ES5", isCorrect: false },
-			{ option: "ES6", isCorrect: true },
-			{ option: "ES7", isCorrect: false },
-			{ option: "ES8", isCorrect: false },
-		],
-	},
-	{
-		question: "В каком году был придуман JS?",
-		answers: [
-			{ option: "1995", isCorrect: true },
-			{ option: "2002", isCorrect: false },
-			{ option: "2010", isCorrect: false },
-			{ option: "2020...", isCorrect: false },
-		],
-	},
-];
+import Database from './quizData.json';
+
+const quizData: QuestionItem[] = Object.values(Database);
 
 export const App: React.FC = () => {
 	const dispatch = useDispatch();
 	const { css } = useFela();
 	const [currentQuiz, setCurrentQuiz] = React.useState<number>(0);
 
-	// React.useEffect(function getCorrectAnswer(): answerOptions | undefined {
-	// 	const allAnswers = quizData[currentQuiz].answers;
-		
-	// 	const correctAnswer = allAnswers.find((answer) => answer.isCorrect === true);
-	// 	return correctAnswer;
-	// }, [currentQuiz]);
+	const score = useSelector((scoreObj) => scoreObj.scoreReducer.scoreValue);
 
-	let score = useSelector((scoreObj: RootState) => scoreObj.scoreReducer.scoreValue);
+	function getCorrectAnswer() {
+		const allAnswers = quizData[currentQuiz].answers;
+		
+		const correctAnswer = allAnswers.find((answer) => answer.isCorrect === true);
+		return correctAnswer;
+	};
 
 	function handleAnswerClick(answer: answerOptions): void {
 		if (answer.isCorrect) {
@@ -81,7 +37,16 @@ export const App: React.FC = () => {
 			});
 		}
 
-		// getCorrectAnswer();
+		const answerObj: IAnswersPayload = {
+			question: quizData[currentQuiz].question,
+			userOption: answer.option,
+			correctOption: getCorrectAnswer()!.option
+		}
+
+		dispatch({
+			type: 'ADD_ANSWERS',
+			payload: answerObj
+		});
 
 		setCurrentQuiz((prev) => ++prev);
 	}
@@ -89,6 +54,9 @@ export const App: React.FC = () => {
 	function handleReloadButton(): void {
 		dispatch({
 			type: "RESET_SCORE",
+		});
+		dispatch({
+			type: 'RESET_ANSWERS'
 		});
 		setCurrentQuiz(0);
 	}

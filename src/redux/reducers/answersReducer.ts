@@ -1,15 +1,26 @@
 import { IAnswersAction } from '../../interfaces';
 
 const initialState = {
-	answers: {},
+	answers: []
 };
 
 export const answersReducer = (state = initialState, action: IAnswersAction) => {
 	switch(action.type) {
-		case 'ADD_OPTION':
+		case 'ADD_ANSWERS': {
+			const newAnswers = [...state.answers, action.payload];
+
 			return {
 				...state,
-				answers: action.payload
+				answers: newAnswers,
 			}
+		}
+		
+		case 'RESET_ANSWERS':
+			return {
+				answers: []
+			}
+
+		default:
+			return state;
 	}
 }
