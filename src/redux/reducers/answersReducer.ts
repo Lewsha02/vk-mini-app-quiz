@@ -1,6 +1,7 @@
 import { IAnswersAction } from '../../interfaces';
+import { IAnswersPayload } from '../../interfaces';
 
-const initialState = {
+const initialState: { answers: IAnswersPayload[] } = {
 	answers: []
 };
 

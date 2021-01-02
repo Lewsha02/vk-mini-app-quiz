@@ -25,7 +25,7 @@ export const App: React.FC = () => {
 	function getCorrectAnswer() {
 		const allAnswers = quizData[currentQuiz].answers;
 		
-		const correctAnswer = allAnswers.find((answer) => answer.isCorrect === true);
+		const correctAnswer = allAnswers.find((answer) => answer.isCorrect);
 		return correctAnswer;
 	};
 

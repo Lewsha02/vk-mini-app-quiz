@@ -29,11 +29,10 @@ export interface IResultProps {
 
 export interface IScoreAction {
 	type: 'INCREASE_SCORE' | 'RESET_SCORE',
-	payload: number
 }
 
 export interface IAnswersAction {
-	type: string,
+	type: 'ADD_ANSWERS' | 'RESET_ANSWERS',
 	payload: IAnswersPayload
 }
 

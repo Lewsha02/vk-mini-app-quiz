@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 
 export const Results: React.FC<IResultProps> = ({score}) => {
 	const { css } = useFela();
-	const { answers }: any = useSelector((data) => data.answersReducer);
+	const { answers } = useSelector((data) => data.answersReducer);
 
 	return (
 		<>
