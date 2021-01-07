@@ -8,8 +8,6 @@ export interface QuestionItem {
 	answers: Array<answerOptions>
 };
 
-export interface Questions extends Array<QuestionItem>{};
-
 import { rootReducer } from "./redux/reducers/rootReducer";
 export type RootState = ReturnType<typeof rootReducer>;
 
@@ -34,6 +32,11 @@ export interface IScoreAction {
 export interface IAnswersAction {
 	type: 'ADD_ANSWERS' | 'RESET_ANSWERS',
 	payload: IAnswersPayload
+}
+
+export interface IDataAction {
+	type: 'SET_QUIZ',
+	payload: QuestionItem[]
 }
 
 declare module 'react-redux' {

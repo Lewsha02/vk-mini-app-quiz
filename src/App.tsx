@@ -11,23 +11,32 @@ import { useFela, CssFelaStyle } from "react-fela";
 import { quizContainer, quizHeader, title, answerBtn } from "./styles";
 import { useSelector, useDispatch } from "react-redux";
 
-import Database from './quizData.json';
+import Database from "./quizData.json";
+import { setQuiz } from "./redux/actions/data";
+import { CustomQuiz } from "./components/CustomQuiz";
 
 const quizData: QuestionItem[] = Object.values(Database);
 
 export const App: React.FC = () => {
 	const dispatch = useDispatch();
 	const { css } = useFela();
+
 	const [currentQuiz, setCurrentQuiz] = React.useState<number>(0);
 
 	const score = useSelector((scoreObj) => scoreObj.scoreReducer.scoreValue);
 
+	React.useEffect(() => {
+		dispatch(setQuiz(quizData));
+	}, []);
+
+	const { quizItems }  = useSelector((quizObj) => quizObj.dataReducer);
+
 	function getCorrectAnswer() {
-		const allAnswers = quizData[currentQuiz].answers;
-		
+		const allAnswers = quizItems[currentQuiz].answers;
+
 		const correctAnswer = allAnswers.find((answer) => answer.isCorrect);
 		return correctAnswer;
-	};
+	}
 
 	function handleAnswerClick(answer: answerOptions): void {
 		if (answer.isCorrect) {
@@ -38,14 +47,14 @@ export const App: React.FC = () => {
 		}
 
 		const answerObj: IAnswersPayload = {
-			question: quizData[currentQuiz].question,
+			question: quizItems[currentQuiz].question,
 			userOption: answer.option,
-			correctOption: getCorrectAnswer()!.option
-		}
+			correctOption: getCorrectAnswer()!.option,
+		};
 
 		dispatch({
-			type: 'ADD_ANSWERS',
-			payload: answerObj
+			type: "ADD_ANSWERS",
+			payload: answerObj,
 		});
 
 		setCurrentQuiz((prev) => ++prev);
@@ -56,7 +65,7 @@ export const App: React.FC = () => {
 			type: "RESET_SCORE",
 		});
 		dispatch({
-			type: 'RESET_ANSWERS'
+			type: "RESET_ANSWERS",
 		});
 		setCurrentQuiz(0);
 	}
@@ -64,19 +73,20 @@ export const App: React.FC = () => {
 	return (
 		<div className={css(quizContainer)} id='quiz'>
 			<div className={css(quizHeader)}>
-				{currentQuiz < quizData.length ? (
-					<>
-						<h2 className={css(title)}>{quizData[currentQuiz].question}</h2>
-						{quizData[currentQuiz].answers.map((answer, index) => (
-							<button
-								key={`${answer}_${index}`}
-								className={css(answerBtn)}
-								onClick={() => handleAnswerClick(answer)}
-							>
-								{answer.option}
-							</button>
-						))}
-					</>
+				{currentQuiz < quizItems.length ? (
+					<CustomQuiz />
+					// <>
+					// 	<h2 className={css(title)}>{quizItems[currentQuiz].question}</h2>
+					// 	{quizItems[currentQuiz].answers.map((answer, index) => (
+					// 		<button
+					// 			key={`${answer}_${index}`}
+					// 			className={css(answerBtn)}
+					// 			onClick={() => handleAnswerClick(answer)}
+					// 		>
+					// 			{answer.option}
+					// 		</button>
+					// 	))}
+					// </>
 				) : (
 					<>
 						<Results score={score} />

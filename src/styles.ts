@@ -39,7 +39,7 @@ export const title: CssFelaStyle<{}, {}> = () => ({
 });
 
 export const answerBtn: CssFelaStyle<{}, {}> = () => ({
-	backgroundColor: "#683AB6",
+	backgroundColor: "#844de0",
 	border: "2px solid #C9C8CC",
 	borderRadius: "20px",
 	width: "100%",
@@ -51,10 +51,10 @@ export const answerBtn: CssFelaStyle<{}, {}> = () => ({
 	marginBottom: "15px",
 	padding: "15px",
 	":hover": {
-		backgroundColor: "#592ea3",
+		backgroundColor: "#7f45e0",
 	},
 	":focus": {
-		backgroundColor: "#7340ca",
+		backgroundColor: "#8e56ec",
 		outline: "none",
 	},
 	"@media (max-width: 480px)": {

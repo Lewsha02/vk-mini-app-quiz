@@ -26,6 +26,7 @@
     "@types/react-dom": "^16.9.6",
     "@types/react-redux": "^7.1.14",
     "@types/redux": "^3.6.0",
+    "@types/redux-thunk": "^2.1.0",
     "@vkontakte/icons": "^1.20.0",
     "@vkontakte/vk-bridge": "^2.1.5",
     "@vkontakte/vk-miniapps-deploy": "0.0.17",
