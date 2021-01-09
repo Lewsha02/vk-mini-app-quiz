@@ -35,8 +35,8 @@ export interface IAnswersAction {
 }
 
 export interface IDataAction {
-	type: 'SET_QUIZ',
-	payload: QuestionItem[]
+	type: 'ADD_CUSTOM_QUIZ',
+	payload: QuestionItem
 }
 
 declare module 'react-redux' {

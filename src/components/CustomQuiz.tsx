@@ -1,10 +1,12 @@
 import React from "react";
+import { useDispatch } from 'react-redux';
 
 import { useFela, CssFelaStyle } from "react-fela";
 import { QuestionItem } from "../interfaces";
 
-import { answerBtn } from '../styles';
-import editSvg from '../assets/edit.svg';
+import { answerBtn } from "../styles";
+import editSvg from "../assets/edit.svg";
+import { setCustomQuiz } from "../redux/actions/data";
 
 let userQuestion: QuestionItem = {
 	question: "",
@@ -16,16 +18,29 @@ let userQuestion: QuestionItem = {
 	],
 };
 
+
 export const CustomQuiz: React.FC = () => {
 	const { css } = useFela();
+	const dispatch = useDispatch();
 
 	const [customTitleValue, setCustomTitleValue] = React.useState<string>("");
 	const [optionCorrect, setOptionCorrect] = React.useState<boolean>(false);
+	const [textOfError, setTextOfError] = React.useState<string>("");
+	const [, setOptionValue] = React.useState<string>("");
 
 	function handleCustomTitleInput(
 		event: React.ChangeEvent<HTMLInputElement>
 	): void {
 		setCustomTitleValue(event.target.value);
+	}
+
+	function handleOptionValue(
+		e: React.ChangeEvent<HTMLInputElement>,
+		i: number
+	) {
+		setOptionValue(e.target.value);
+		const newOptionValue = e.target.value;
+		userQuestion.answers[i].option = newOptionValue;
 	}
 
 	function handleCorrectOption(index: number): void {
@@ -41,30 +56,40 @@ export const CustomQuiz: React.FC = () => {
 
 	function handleSubmitButton(e: React.MouseEvent<HTMLButtonElement>): void {
 		e.preventDefault();
-		if(!optionCorrect) {
-			alert('Выберите правильный вариант ответа!');
+		userQuestion.question = customTitleValue;
+		const hasNotOption = userQuestion.answers.find(answer => !answer.option);
+
+		if (!customTitleValue) {
+			setTextOfError("Необходимо придумать вопрос");
+		} else if (hasNotOption) {
+			setTextOfError("Необходимо заполнить варианты ответа");
+		} else if (!optionCorrect) {
+			setTextOfError("Необходимо выбрать правильный ответ");
+		}
+		else {
+			setTextOfError("");
+			dispatch(setCustomQuiz(userQuestion));
 		}
 	}
 
 	return (
 		<form className={css(customQuestionForm)}>
+			{textOfError && <div className={css(modal)}>{textOfError}</div>}
 			<div className={css(customTitle)}>
 				<input
 					type='text'
 					required
 					placeholder='Введите ваш вопрос'
-					value={customTitleValue}
 					onChange={handleCustomTitleInput}
 				/>
-				{/* <img src={editSvg} alt="edit icon"/> */}
 			</div>
 			{userQuestion.answers.map((answer, index: number) => (
 				<div className={css(customOption)} key={index}>
 					<input
 						type='text'
 						placeholder='Введите вариант ответа'
-						required
 						className={css(optionText)}
+						onChange={(e) => handleOptionValue(e, index)}
 					/>
 					<input
 						type='checkbox'
@@ -86,8 +111,8 @@ export const CustomQuiz: React.FC = () => {
 			))}
 			<button
 				className={css(answerBtn)}
-				type="submit"
-				onClick={e => handleSubmitButton(e)}
+				type='submit'
+				onClick={(e) => handleSubmitButton(e)}
 			>
 				Создать вопрос
 			</button>
@@ -95,31 +120,46 @@ export const CustomQuiz: React.FC = () => {
 	);
 };
 
+const modal: CssFelaStyle<{}, {}> = () => ({
+	textAlign: "center",
+	fontSize: "16px",
+	marginBottom: "30px",
+	padding: "0.8rem",
+	borderRadius: "5px",
+	boxShadow: "3px 5px 20px -6px rgba(0,0,0,0.75)",
+	color: "#333",
+	position: "absolute",
+	bottom: "-20px",
+	width: "90%",
+	left: "50%",
+	transform: "translateX(-50%)",
+});
+
 const customQuestionForm: CssFelaStyle<{}, {}> = () => ({
-	display: 'block',
+	display: "block",
 	'> button[type="submit"]': {
 		marginBottom: 0,
-		borderColor: 'transparent',
-		marginTop: '45px'
-	}
+		borderColor: "transparent",
+		marginTop: "45px",
+	},
 });
 
 const customTitle: CssFelaStyle<{}, {}> = () => ({
 	textAlign: "center",
 	marginBottom: "40px",
-	position: 'relative',
+	position: "relative",
 	"> input": {
 		fontSize: "28px",
 		outline: "none",
 		border: "none",
 		padding: "0.5rem",
-		paddingRight: '20px',
+		paddingRight: "20px",
 		textAlign: "center",
-		cursor: 'pointer',
+		cursor: "pointer",
 		backgroundImage: `url(${editSvg})`,
-		backgroundPosition: 'right',
-		backgroundRepeat: 'no-repeat',
-		backgroundSize: '15px'
+		backgroundPosition: "right",
+		backgroundRepeat: "no-repeat",
+		backgroundSize: "15px",
 	},
 });
 
@@ -153,9 +193,9 @@ const optionText: CssFelaStyle<{}, {}> = () => ({
 	borderRadius: "5px",
 	outline: "none",
 	fontSize: "16px",
-	':focus': {
-		borderColor: '#844de0'
-	}
+	":focus": {
+		borderColor: "#844de0",
+	},
 });
 
 const customOptionCheckbox: CssFelaStyle<{}, {}> = () => ({

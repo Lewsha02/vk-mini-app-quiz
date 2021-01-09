@@ -1,21 +1,16 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useFela, CssFelaStyle } from "react-fela";
 
-import { QuestionItem } from "./interfaces";
 import { answerOptions } from "./interfaces";
 import { IAnswersPayload } from "./interfaces";
 
+import { CustomQuiz } from "./components/CustomQuiz";
 import { Results } from "./components/Results";
 
-import { useFela, CssFelaStyle } from "react-fela";
+import { addAnswers } from "./redux/actions/setAnswers";
 
 import { quizContainer, quizHeader, title, answerBtn } from "./styles";
-import { useSelector, useDispatch } from "react-redux";
-
-import Database from "./quizData.json";
-import { setQuiz } from "./redux/actions/data";
-import { CustomQuiz } from "./components/CustomQuiz";
-
-const quizData: QuestionItem[] = Object.values(Database);
 
 export const App: React.FC = () => {
 	const dispatch = useDispatch();
@@ -24,11 +19,6 @@ export const App: React.FC = () => {
 	const [currentQuiz, setCurrentQuiz] = React.useState<number>(0);
 
 	const score = useSelector((scoreObj) => scoreObj.scoreReducer.scoreValue);
-
-	React.useEffect(() => {
-		dispatch(setQuiz(quizData));
-	}, []);
-
 	const { quizItems }  = useSelector((quizObj) => quizObj.dataReducer);
 
 	function getCorrectAnswer() {
@@ -52,10 +42,7 @@ export const App: React.FC = () => {
 			correctOption: getCorrectAnswer()!.option,
 		};
 
-		dispatch({
-			type: "ADD_ANSWERS",
-			payload: answerObj,
-		});
+		dispatch(addAnswers(answerObj));
 
 		setCurrentQuiz((prev) => ++prev);
 	}

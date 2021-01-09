@@ -2,11 +2,13 @@ import { CssFelaStyle } from 'react-fela';
 
 export const quizContainer: CssFelaStyle<{}, {}> = () => ({
 	backgroundColor: "#fff",
+	position: 'relative',
 	borderRadius: "10px",
 	boxShadow: "0 0 10px 2px rbga(100, 100, 100, 0.1)",
 	overflow: "hidden",
 	width: "600px",
 	maxWidth: "100%",
+	paddingBottom: '15px',
 	"@media (max-width: 768px)": {
 		width: "450px",
 	},
