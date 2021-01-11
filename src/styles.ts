@@ -61,6 +61,31 @@ export const answerBtn: CssFelaStyle<{}, {}> = () => ({
 	},
 	"@media (max-width: 480px)": {
 		fontSize: "14px",
-		padding: "10px",
+		padding: "10px"
+	},
+});
+
+export const reloadBtn: CssFelaStyle<{}, {}> = () => ({
+	backgroundColor: "#fbaf00",
+	border: "none",
+	borderRadius: "10px",
+	width: "100%",
+	color: "#fff",
+	cursor: "pointer",
+	display: "block",
+	fontFamily: "inherit",
+	fontSize: "18px",
+	marginBottom: "15px",
+	padding: "20px",
+	":hover": {
+		backgroundColor: "#e7a305",
+	},
+	":focus": {
+		backgroundColor: "#f3ac07",
+		outline: "none",
+	},
+	"@media (max-width: 480px)": {
+		fontSize: "16px",
+		padding: "15px",
 	},
 });

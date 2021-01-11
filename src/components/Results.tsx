@@ -1,15 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import { useFela, CssFelaStyle } from "react-fela";
 
-import { title } from "../styles";
+import { title, reloadBtn } from "../styles";
 
-import { IResultProps } from '../interfaces';
-import { IAnswersPayload } from '../interfaces';
+import { IResultProps } from "../interfaces";
+import { IAnswersPayload } from "../interfaces";
 
 import { useSelector } from "react-redux";
 
-export const Results: React.FC<IResultProps> = ({score}) => {
+export const Results: React.FC<IResultProps> = ({ score }) => {
 	const { css } = useFela();
 	const { answers } = useSelector((data) => data.answersReducer);
 
@@ -23,6 +24,11 @@ export const Results: React.FC<IResultProps> = ({score}) => {
 					<p>Верный ответ: {answer.correctOption}.</p>
 				</div>
 			))}
+			<Link to='/customQuiz'>
+				<button className={css(reloadBtn)}>
+					Добавить свой вопрос
+				</button>
+			</Link>
 		</>
 	);
 };

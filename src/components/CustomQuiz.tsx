@@ -1,5 +1,6 @@
 import React from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
 
 import { useFela, CssFelaStyle } from "react-fela";
 import { QuestionItem } from "../interfaces";
@@ -18,15 +19,17 @@ let userQuestion: QuestionItem = {
 	],
 };
 
-
 export const CustomQuiz: React.FC = () => {
 	const { css } = useFela();
 	const dispatch = useDispatch();
+	const history = useHistory();
 
 	const [customTitleValue, setCustomTitleValue] = React.useState<string>("");
 	const [optionCorrect, setOptionCorrect] = React.useState<boolean>(false);
 	const [textOfError, setTextOfError] = React.useState<string>("");
 	const [, setOptionValue] = React.useState<string>("");
+
+	const { quizItems }  = useSelector((quizObj) => quizObj.dataReducer);
 
 	function handleCustomTitleInput(
 		event: React.ChangeEvent<HTMLInputElement>
@@ -54,10 +57,12 @@ export const CustomQuiz: React.FC = () => {
 		});
 	}
 
+
 	function handleSubmitButton(e: React.MouseEvent<HTMLButtonElement>): void {
 		e.preventDefault();
 		userQuestion.question = customTitleValue;
-		const hasNotOption = userQuestion.answers.find(answer => !answer.option);
+		const hasNotOption = userQuestion.answers.find((answer) => !answer.option);
+		const IsStorageFull = (quizItems.length >= 15) || false;
 
 		if (!customTitleValue) {
 			setTextOfError("Необходимо придумать вопрос");
@@ -65,10 +70,12 @@ export const CustomQuiz: React.FC = () => {
 			setTextOfError("Необходимо заполнить варианты ответа");
 		} else if (!optionCorrect) {
 			setTextOfError("Необходимо выбрать правильный ответ");
-		}
+		} else if (IsStorageFull) {
+			setTextOfError("Вы не можете создать более 10 вопросов");
+		} 
 		else {
-			setTextOfError("");
 			dispatch(setCustomQuiz(userQuestion));
+			history.push('./');
 		}
 	}
 
@@ -81,6 +88,7 @@ export const CustomQuiz: React.FC = () => {
 					required
 					placeholder='Введите ваш вопрос'
 					onChange={handleCustomTitleInput}
+					value={customTitleValue}
 				/>
 			</div>
 			{userQuestion.answers.map((answer, index: number) => (
@@ -90,6 +98,7 @@ export const CustomQuiz: React.FC = () => {
 						placeholder='Введите вариант ответа'
 						className={css(optionText)}
 						onChange={(e) => handleOptionValue(e, index)}
+						name="optionText"
 					/>
 					<input
 						type='checkbox'
@@ -109,13 +118,14 @@ export const CustomQuiz: React.FC = () => {
 					</label>
 				</div>
 			))}
-			<button
-				className={css(answerBtn)}
-				type='submit'
-				onClick={(e) => handleSubmitButton(e)}
-			>
-				Создать вопрос
-			</button>
+			<>
+				<button
+					className={css(answerBtn)}
+					onClick={(e) => handleSubmitButton(e)}
+				>
+					Создать вопрос
+				</button>
+				</>
 		</form>
 	);
 };
@@ -133,6 +143,10 @@ const modal: CssFelaStyle<{}, {}> = () => ({
 	width: "90%",
 	left: "50%",
 	transform: "translateX(-50%)",
+	"@media (max-width: 768px)": {
+		fontSize: "14px",
+		padding: "0.6rem",
+	},
 });
 
 const customQuestionForm: CssFelaStyle<{}, {}> = () => ({
@@ -141,6 +155,13 @@ const customQuestionForm: CssFelaStyle<{}, {}> = () => ({
 		marginBottom: 0,
 		borderColor: "transparent",
 		marginTop: "45px",
+		"@media (max-width: 420px)": {
+			marginTop: "20px",
+		},
+	},
+	"@media (max-width: 768px)": {
+		paddingTop: "20px",
+		paddingBottom: "20px",
 	},
 });
 
@@ -160,6 +181,12 @@ const customTitle: CssFelaStyle<{}, {}> = () => ({
 		backgroundPosition: "right",
 		backgroundRepeat: "no-repeat",
 		backgroundSize: "15px",
+		"@media (max-width: 768px)": {
+			fontSize: "20px",
+		},
+	},
+	"@media (max-width: 420px)": {
+		marginBottom: "10px",
 	},
 });
 
@@ -184,6 +211,9 @@ const customOption: CssFelaStyle<{}, {}> = () => ({
 			},
 		},
 	},
+	"@media (max-width: 420px)": {
+		marginBottom: "10px",
+	},
 });
 
 const optionText: CssFelaStyle<{}, {}> = () => ({
@@ -195,6 +225,13 @@ const optionText: CssFelaStyle<{}, {}> = () => ({
 	fontSize: "16px",
 	":focus": {
 		borderColor: "#844de0",
+	},
+	"@media (max-width: 768px)": {
+		fontSize: "14px",
+	},
+	"@media (max-width: 480px)": {
+		padding: "0.6rem",
+		flexBasis: "90%",
 	},
 });
 
