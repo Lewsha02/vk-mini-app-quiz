@@ -27,7 +27,6 @@ export const CustomQuiz: React.FC = () => {
 	const [customTitleValue, setCustomTitleValue] = React.useState<string>("");
 	const [optionCorrect, setOptionCorrect] = React.useState<boolean>(false);
 	const [textOfError, setTextOfError] = React.useState<string>("");
-	const [, setOptionValue] = React.useState<string>("");
 
 	const { quizItems }  = useSelector((quizObj) => quizObj.dataReducer);
 
@@ -41,7 +40,6 @@ export const CustomQuiz: React.FC = () => {
 		e: React.ChangeEvent<HTMLInputElement>,
 		i: number
 	) {
-		setOptionValue(e.target.value);
 		const newOptionValue = e.target.value;
 		userQuestion.answers[i].option = newOptionValue;
 	}
@@ -49,11 +47,7 @@ export const CustomQuiz: React.FC = () => {
 	function handleCorrectOption(index: number): void {
 		setOptionCorrect((prev) => !prev);
 		userQuestion.answers.forEach((answer, i) => {
-			if (i !== index) {
-				answer.isCorrect = false;
-			} else {
-				answer.isCorrect = true;
-			}
+			answer.isCorrect = i === index;
 		});
 	}
 
@@ -91,7 +85,7 @@ export const CustomQuiz: React.FC = () => {
 					value={customTitleValue}
 				/>
 			</div>
-			{userQuestion.answers.map((answer, index: number) => (
+			{userQuestion.answers.map((answer, index) => (
 				<div className={css(customOption)} key={index}>
 					<input
 						type='text'
@@ -121,7 +115,7 @@ export const CustomQuiz: React.FC = () => {
 			<>
 				<button
 					className={css(answerBtn)}
-					onClick={(e) => handleSubmitButton(e)}
+					onClick={handleSubmitButton}
 				>
 					Создать вопрос
 				</button>
