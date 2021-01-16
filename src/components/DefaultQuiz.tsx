@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useFela } from "react-fela";
 
@@ -10,14 +10,14 @@ import { addAnswers } from "../redux/actions/setAnswers";
 
 import { title, answerBtn, reloadBtn } from "../styles";
 
-export const DefaultQuiz: React.FC = () => {
+export const DefaultQuiz: React.FC = React.memo(() => {
 	const { css } = useFela();
 	const dispatch = useDispatch();
 
 	const [currentQuiz, setCurrentQuiz] = React.useState<number>(0);
 
 	const score = useSelector((scoreObj) => scoreObj.scoreReducer.scoreValue);
-	const { quizItems }  = useSelector((quizObj) => quizObj.dataReducer);
+	const { quizItems } = useSelector((quizObj) => quizObj.dataReducer);
 
 	function getCorrectAnswer() {
 		const allAnswers = quizItems[currentQuiz].answers;
@@ -57,27 +57,27 @@ export const DefaultQuiz: React.FC = () => {
 
 	return (
 		<>
-		{currentQuiz < quizItems.length ? (
-			<>
-				<h2 className={css(title)}>{quizItems[currentQuiz].question}</h2>
-				{quizItems[currentQuiz].answers.map((answer, index) => (
-					<button
-						key={`${answer}_${index}`}
-						className={css(answerBtn)}
-						onClick={() => handleAnswerClick(answer)}
-					>
-						{answer.option}
+			{currentQuiz < quizItems.length ? (
+				<>
+					<h2 className={css(title)}>{quizItems[currentQuiz].question}</h2>
+					{quizItems[currentQuiz].answers.map((answer, index) => (
+						<button
+							key={`${answer}_${index}`}
+							className={css(answerBtn)}
+							onClick={() => handleAnswerClick(answer)}
+						>
+							{answer.option}
+						</button>
+					))}
+				</>
+			) : (
+				<>
+					<Results score={score} />
+					<button className={css(reloadBtn)} onClick={handleReloadButton}>
+						Попробовать еще раз
 					</button>
-				))}
-			</>
-		) : (
-			<>
-				<Results score={score} />
-				<button className={css(reloadBtn)} onClick={handleReloadButton}>
-					Попробовать еще раз
-				</button>
-			</>
-		)}
+				</>
+			)}
 		</>
 	);
-};
+});

@@ -1,12 +1,12 @@
 import React from "react";
 import { useFela } from "react-fela";
-import { Route } from 'react-router-dom';
+import { Route } from "react-router-dom";
 
 import { quizContainer, quizHeader } from "./styles";
 import { homePage } from "./pages/homePage";
 import { customQuizPage } from "./pages/customQuizPage";
 
-export const App: React.FC = () => {
+export const App: React.FC = React.memo(() => {
 	const { css } = useFela();
 
 	return (
@@ -17,4 +17,4 @@ export const App: React.FC = () => {
 			</div>
 		</div>
 	);
-};
+});
