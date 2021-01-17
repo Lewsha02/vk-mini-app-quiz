@@ -10,12 +10,22 @@ import { IAnswersPayload } from "../interfaces";
 import { useSelector } from "react-redux";
 
 interface IResultProps {
-	score: number
+	score: number;
 }
 
 export const Results: React.FC<IResultProps> = React.memo(({ score }) => {
 	const { css } = useFela();
 	const { answers } = useSelector((data) => data.answersReducer);
+
+	function addAttemptsToCookie() {
+		let numberOfTry = document.cookie.slice(11) || '0';
+		document.cookie = `countOfTry=${numberOfTry}`;
+	
+		let newCountOfTry = Number(document.cookie.slice(11)) + 1;
+		document.cookie = `countOfTry=${newCountOfTry}`;
+	}
+
+	addAttemptsToCookie();
 
 	return (
 		<>

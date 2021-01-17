@@ -20,15 +20,15 @@ bridge.send("VKWebAppInit");
 
 ReactDOM.render(
 	<BrowserRouter>
-			<Provider store={store}>
-				<RendererProvider renderer={renderer}>
-					<App/>
-				</RendererProvider>
-			</Provider>
+		<Provider store={store}>
+			<RendererProvider renderer={renderer}>
+				<App />
+			</RendererProvider>
+		</Provider>
 	</BrowserRouter>,
 	document.getElementById("root")
 );
 
 // if (process.env.NODE_ENV === "development") {
-//   import("./eruda").then(eruda => {}); //runtime download
+// 	import("./eruda").then((eruda) => {}); //runtime download
 // }

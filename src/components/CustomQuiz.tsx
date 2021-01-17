@@ -78,6 +78,7 @@ export const CustomQuiz: React.FC = React.memo(() => {
 			setTextOfError("Вы не можете создать более 10 вопросов");
 		} else {
 			dispatch(setCustomQuiz(questionData));
+			localStorage.setItem(`customQuiz${quizItems.length - 5}`, JSON.stringify(questionData));
 			history.push("./");
 		}
 	}
