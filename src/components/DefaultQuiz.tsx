@@ -4,9 +4,15 @@ import { useFela } from "react-fela";
 
 import { Results } from "../components/Results";
 
-import { answerOptions, IAnswersPayload } from "../interfaces";
+import {
+	answerOptions,
+	IAnswersPayload,
+	localStorageKeys,
+	QuestionItem,
+} from "../interfaces";
 
 import { addAnswers } from "../redux/actions/setAnswers";
+import { addCustomQuiz } from "../redux/actions/data";
 
 import { title, answerBtn, reloadBtn } from "../styles";
 
@@ -17,7 +23,20 @@ export const DefaultQuiz: React.FC = React.memo(() => {
 	const [currentQuiz, setCurrentQuiz] = React.useState<number>(0);
 
 	const score = useSelector((scoreObj) => scoreObj.scoreReducer.scoreValue);
+
 	const { quizItems } = useSelector((quizObj) => quizObj.dataReducer);
+
+	React.useEffect((): void => {
+		if (localStorage.getItem(localStorageKeys.customQuiz)) {
+			const quiz: QuestionItem = JSON.parse(
+				localStorage.getItem(localStorageKeys.customQuiz) as string
+			);
+			const quizForRedux = Object.values(quiz);
+			quizForRedux.forEach((el) => dispatch(addCustomQuiz(el)));
+		} else {
+			return;
+		}
+	}, []);
 
 	function getCorrectAnswer() {
 		const allAnswers = quizItems[currentQuiz].answers;

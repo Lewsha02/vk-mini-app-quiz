@@ -35,6 +35,10 @@ export interface IDataAction {
 	payload: QuestionItem;
 }
 
+export enum localStorageKeys {
+	customQuiz = "customQuiz",
+}
+
 declare module "react-redux" {
 	export interface DefaultRootState extends RootState {}
 }

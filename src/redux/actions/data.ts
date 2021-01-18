@@ -1,6 +1,6 @@
 import { QuestionItem } from '../../interfaces';
 
-export const setCustomQuiz = (customQuizItem: QuestionItem) => ({
+export const addCustomQuiz = (customQuizItem: QuestionItem) => ({
 	type: 'ADD_CUSTOM_QUIZ',
 	payload: customQuizItem
 });

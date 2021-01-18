@@ -1,10 +1,9 @@
 import React from "react";
 import { CssFelaStyle, useFela } from "react-fela";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import editSvg from "../assets/edit.svg";
-import { QuestionItem } from "../interfaces";
-import { setCustomQuiz } from "../redux/actions/data";
+import { QuestionItem, localStorageKeys } from "../interfaces";
 import { answerBtn } from "../styles";
 
 const userDefaultQuestion: QuestionItem = {
@@ -19,7 +18,6 @@ const userDefaultQuestion: QuestionItem = {
 
 export const CustomQuiz: React.FC = React.memo(() => {
 	const { css } = useFela();
-	const dispatch = useDispatch();
 	const history = useHistory();
 
 	const [textOfError, setTextOfError] = React.useState<string>("");
@@ -59,6 +57,33 @@ export const CustomQuiz: React.FC = React.memo(() => {
 		}));
 	}
 
+	function addCustomQuizToLS(obj: string, value: QuestionItem): void {
+		if (!localStorage.getItem(obj)) {
+			const newQuiz = {
+				0: value,
+			};
+			localStorage.setItem(obj, JSON.stringify(newQuiz));
+		} else {
+			const prevQuiz = JSON.parse(localStorage.getItem(obj) as string);
+			const newKey = Object.keys(prevQuiz).length - 1 + 1;
+			const newQuiz = {
+				...prevQuiz,
+				[newKey]: value,
+			};
+			localStorage.setItem(obj, JSON.stringify(newQuiz));
+		}
+
+		// НА СЛУЧАЙ ЕСЛИ НИХУЯ НЕ ПОЛУЧИТСЯ С ОБЪКТАМИ
+		/* if (!localStorage.getItem(key)) {
+			 const newQuiz = [value];
+			 localStorage.setItem(key, JSON.stringify(newQuiz));
+		 } else {
+			 const prevQuiz = JSON.parse(localStorage.getItem(key) as string);
+			 const newQuiz = [...prevQuiz, value];
+			 localStorage.setItem(key, JSON.stringify(newQuiz));
+		 } */
+	}
+
 	function handleSubmitButton(e: React.MouseEvent<HTMLButtonElement>): void {
 		e.preventDefault();
 
@@ -77,8 +102,7 @@ export const CustomQuiz: React.FC = React.memo(() => {
 		} else if (IsStorageFull) {
 			setTextOfError("Вы не можете создать более 10 вопросов");
 		} else {
-			dispatch(setCustomQuiz(questionData));
-			localStorage.setItem(`customQuiz${quizItems.length - 5}`, JSON.stringify(questionData));
+			addCustomQuizToLS(localStorageKeys.customQuiz, questionData);
 			history.push("./");
 		}
 	}

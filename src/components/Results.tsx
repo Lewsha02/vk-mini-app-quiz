@@ -13,24 +13,27 @@ interface IResultProps {
 	score: number;
 }
 
+function addAttemptsToCookie() {
+	const cookieKey = "countOfTry";
+	const numberOfTry = document.cookie.slice(11) || "0";
+	document.cookie = `${cookieKey}=${numberOfTry}`;
+
+	const newCountOfTry = Number(document.cookie.slice(11)) + 1;
+	document.cookie = `${cookieKey}=${newCountOfTry}`;
+}
+
 export const Results: React.FC<IResultProps> = React.memo(({ score }) => {
 	const { css } = useFela();
 	const { answers } = useSelector((data) => data.answersReducer);
 
-	function addAttemptsToCookie() {
-		let numberOfTry = document.cookie.slice(11) || '0';
-		document.cookie = `countOfTry=${numberOfTry}`;
-	
-		let newCountOfTry = Number(document.cookie.slice(11)) + 1;
-		document.cookie = `countOfTry=${newCountOfTry}`;
-	}
-
 	addAttemptsToCookie();
+
+	const attemps = document.cookie.slice(11);
 
 	return (
 		<>
 			<h2 className={css(title)}>
-				Вы верно ответили на {score} из {answers.length} вопросов
+				Вы верно ответили на {score} из {answers.length} вопросов с {attemps} попытки
 			</h2>
 			{answers.map((answer: IAnswersPayload, index: number) => (
 				<div key={`${answer.question}_${index}`} className={css(quizResult)}>
