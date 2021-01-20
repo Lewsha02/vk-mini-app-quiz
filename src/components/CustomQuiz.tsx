@@ -16,6 +16,23 @@ const userDefaultQuestion: QuestionItem = {
 	],
 };
 
+function addCustomQuizToLS(obj: string, value: QuestionItem): void {
+	if (!localStorage.getItem(obj)) {
+		const newQuiz = {
+			0: value,
+		};
+		localStorage.setItem(obj, JSON.stringify(newQuiz));
+	} else {
+		const prevQuiz = JSON.parse(localStorage.getItem(obj) as string);
+		const newKey = Object.keys(prevQuiz).length - 1 + 1;
+		const newQuiz = {
+			...prevQuiz,
+			[newKey]: value,
+		};
+		localStorage.setItem(obj, JSON.stringify(newQuiz));
+	}
+}
+
 export const CustomQuiz: React.FC = React.memo(() => {
 	const { css } = useFela();
 	const history = useHistory();
@@ -24,6 +41,7 @@ export const CustomQuiz: React.FC = React.memo(() => {
 	const [questionData, setQuestionData] = React.useState(userDefaultQuestion);
 
 	const { quizItems } = useSelector((quizObj) => quizObj.dataReducer);
+	const quizItemsArr = Object.values(quizItems);
 
 	function handleCustomTitleInput(
 		event: React.ChangeEvent<HTMLInputElement>
@@ -57,33 +75,6 @@ export const CustomQuiz: React.FC = React.memo(() => {
 		}));
 	}
 
-	function addCustomQuizToLS(obj: string, value: QuestionItem): void {
-		if (!localStorage.getItem(obj)) {
-			const newQuiz = {
-				0: value,
-			};
-			localStorage.setItem(obj, JSON.stringify(newQuiz));
-		} else {
-			const prevQuiz = JSON.parse(localStorage.getItem(obj) as string);
-			const newKey = Object.keys(prevQuiz).length - 1 + 1;
-			const newQuiz = {
-				...prevQuiz,
-				[newKey]: value,
-			};
-			localStorage.setItem(obj, JSON.stringify(newQuiz));
-		}
-
-		// НА СЛУЧАЙ ЕСЛИ НИХУЯ НЕ ПОЛУЧИТСЯ С ОБЪКТАМИ
-		/* if (!localStorage.getItem(key)) {
-			 const newQuiz = [value];
-			 localStorage.setItem(key, JSON.stringify(newQuiz));
-		 } else {
-			 const prevQuiz = JSON.parse(localStorage.getItem(key) as string);
-			 const newQuiz = [...prevQuiz, value];
-			 localStorage.setItem(key, JSON.stringify(newQuiz));
-		 } */
-	}
-
 	function handleSubmitButton(e: React.MouseEvent<HTMLButtonElement>): void {
 		e.preventDefault();
 
@@ -91,7 +82,7 @@ export const CustomQuiz: React.FC = React.memo(() => {
 		const optionCorrect = questionData.answers.find(
 			(answer) => answer.isCorrect
 		);
-		const IsStorageFull = quizItems.length >= 15 || false;
+		const IsStorageFull = quizItemsArr.length >= 15 || false;
 
 		if (!questionData.question) {
 			setTextOfError("Необходимо придумать вопрос");
@@ -303,3 +294,4 @@ const customOptionCheckbox: CssFelaStyle<{}, {}> = () => ({
 		},
 	},
 });
+

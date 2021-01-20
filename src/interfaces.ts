@@ -6,6 +6,10 @@ export interface answerOptions {
 	isCorrect: boolean;
 }
 
+export interface Questions {
+	quizItems: { [step: number]: QuestionItem };
+}
+
 export interface QuestionItem {
 	question: string;
 	answers: Array<answerOptions>;

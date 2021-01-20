@@ -25,6 +25,7 @@ export const DefaultQuiz: React.FC = React.memo(() => {
 	const score = useSelector((scoreObj) => scoreObj.scoreReducer.scoreValue);
 
 	const { quizItems } = useSelector((quizObj) => quizObj.dataReducer);
+	const quizItemsArr = Object.values(quizItems);
 
 	React.useEffect((): void => {
 		if (localStorage.getItem(localStorageKeys.customQuiz)) {
@@ -39,7 +40,7 @@ export const DefaultQuiz: React.FC = React.memo(() => {
 	}, []);
 
 	function getCorrectAnswer() {
-		const allAnswers = quizItems[currentQuiz].answers;
+		const allAnswers = quizItemsArr[currentQuiz].answers;
 
 		const correctAnswer = allAnswers.find((answer) => answer.isCorrect);
 		return correctAnswer;
@@ -54,7 +55,7 @@ export const DefaultQuiz: React.FC = React.memo(() => {
 		}
 
 		const answerObj: IAnswersPayload = {
-			question: quizItems[currentQuiz].question,
+			question: quizItemsArr[currentQuiz].question,
 			userOption: answer.option,
 			correctOption: getCorrectAnswer()!.option,
 		};
@@ -76,7 +77,7 @@ export const DefaultQuiz: React.FC = React.memo(() => {
 
 	return (
 		<>
-			{currentQuiz < quizItems.length ? (
+			{currentQuiz < quizItemsArr.length ? (
 				<>
 					<h2 className={css(title)}>{quizItems[currentQuiz].question}</h2>
 					{quizItems[currentQuiz].answers.map((answer, index) => (
