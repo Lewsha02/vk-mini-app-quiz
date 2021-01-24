@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useFela, CssFelaStyle } from "react-fela";
+import { useFela, FelaStyle } from "react-fela";
 
 import { title, reloadBtn } from "../styles";
 
@@ -49,7 +49,7 @@ export const Results: React.FC<IResultProps> = React.memo(({ score }) => {
 	);
 });
 
-const quizResult: CssFelaStyle<{}, {}> = () => ({
+const quizResult: FelaStyle<{}, {}> = () => ({
 	marginBottom: "40px",
 	"> h4": {
 		fontSize: "20px",

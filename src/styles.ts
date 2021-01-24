@@ -1,6 +1,6 @@
-import { CssFelaStyle } from 'react-fela';
+import { FelaStyle } from 'react-fela';
 
-export const quizContainer: CssFelaStyle<{}, {}> = () => ({
+export const quizContainer: FelaStyle<{}, {}> = () => ({
 	backgroundColor: "#fff",
 	position: 'relative',
 	borderRadius: "10px",
@@ -17,7 +17,7 @@ export const quizContainer: CssFelaStyle<{}, {}> = () => ({
 	},
 });
 
-export const quizHeader: CssFelaStyle<{}, {}> = () => ({
+export const quizHeader: FelaStyle<{}, {}> = () => ({
 	padding: "4rem",
 	"@media (max-width: 768px)": {
 		padding: "2rem",
@@ -27,7 +27,7 @@ export const quizHeader: CssFelaStyle<{}, {}> = () => ({
 	},
 });
 
-export const title: CssFelaStyle<{}, {}> = () => ({
+export const title: FelaStyle<{}, {}> = () => ({
 	padding: "0.5rem",
 	textAlign: "center",
 	margin: 0,
@@ -40,7 +40,7 @@ export const title: CssFelaStyle<{}, {}> = () => ({
 	},
 });
 
-export const answerBtn: CssFelaStyle<{}, {}> = () => ({
+export const answerBtn: FelaStyle<{}, {}> = () => ({
 	backgroundColor: "#844de0",
 	border: "2px solid #C9C8CC",
 	borderRadius: "20px",
@@ -65,7 +65,7 @@ export const answerBtn: CssFelaStyle<{}, {}> = () => ({
 	},
 });
 
-export const reloadBtn: CssFelaStyle<{}, {}> = () => ({
+export const reloadBtn: FelaStyle<{}, {}> = () => ({
 	backgroundColor: "#fbaf00",
 	border: "none",
 	borderRadius: "10px",

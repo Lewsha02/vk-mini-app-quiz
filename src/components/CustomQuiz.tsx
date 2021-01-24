@@ -1,5 +1,5 @@
 import React from "react";
-import { CssFelaStyle, useFela } from "react-fela";
+import { FelaStyle, useFela } from "react-fela";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import editSvg from "../assets/edit.svg";
@@ -16,20 +16,20 @@ const userDefaultQuestion: QuestionItem = {
 	],
 };
 
-function addCustomQuizToLS(obj: string, value: QuestionItem): void {
-	if (!localStorage.getItem(obj)) {
+function addCustomQuizToLS(keyOfLSObj: string, value: QuestionItem): void {
+	if (!localStorage.getItem(keyOfLSObj)) {
 		const newQuiz = {
 			0: value,
 		};
-		localStorage.setItem(obj, JSON.stringify(newQuiz));
+		localStorage.setItem(keyOfLSObj, JSON.stringify(newQuiz));
 	} else {
-		const prevQuiz = JSON.parse(localStorage.getItem(obj) as string);
+		const prevQuiz = JSON.parse(localStorage.getItem(keyOfLSObj) as string);
 		const newKey = Object.keys(prevQuiz).length - 1 + 1;
 		const newQuiz = {
 			...prevQuiz,
 			[newKey]: value,
 		};
-		localStorage.setItem(obj, JSON.stringify(newQuiz));
+		localStorage.setItem(keyOfLSObj, JSON.stringify(newQuiz));
 	}
 }
 
@@ -146,7 +146,7 @@ export const CustomQuiz: React.FC = React.memo(() => {
 	);
 });
 
-const modal: CssFelaStyle<{}, {}> = () => ({
+const modal: FelaStyle<{}, {}> = () => ({
 	textAlign: "center",
 	fontSize: "16px",
 	marginBottom: "30px",
@@ -165,7 +165,7 @@ const modal: CssFelaStyle<{}, {}> = () => ({
 	},
 });
 
-const customQuestionForm: CssFelaStyle<{}, {}> = () => ({
+const customQuestionForm: FelaStyle<{}, {}> = () => ({
 	display: "block",
 	'> button[type="submit"]': {
 		marginBottom: 0,
@@ -181,7 +181,7 @@ const customQuestionForm: CssFelaStyle<{}, {}> = () => ({
 	},
 });
 
-const customTitle: CssFelaStyle<{}, {}> = () => ({
+const customTitle: FelaStyle<{}, {}> = () => ({
 	textAlign: "center",
 	marginBottom: "40px",
 	position: "relative",
@@ -206,7 +206,7 @@ const customTitle: CssFelaStyle<{}, {}> = () => ({
 	},
 });
 
-const customOption: CssFelaStyle<{}, {}> = () => ({
+const customOption: FelaStyle<{}, {}> = () => ({
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "space-between",
@@ -232,7 +232,7 @@ const customOption: CssFelaStyle<{}, {}> = () => ({
 	},
 });
 
-const optionText: CssFelaStyle<{}, {}> = () => ({
+const optionText: FelaStyle<{}, {}> = () => ({
 	padding: "1rem",
 	flexBasis: "93%",
 	border: "1.5px solid #C9C8CC",
@@ -251,7 +251,7 @@ const optionText: CssFelaStyle<{}, {}> = () => ({
 	},
 });
 
-const customOptionCheckbox: CssFelaStyle<{}, {}> = () => ({
+const customOptionCheckbox: FelaStyle<{}, {}> = () => ({
 	userSelect: "none",
 	cursor: "pointer",
 	"> span": {
